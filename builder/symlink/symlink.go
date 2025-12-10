@@ -91,8 +91,10 @@ func populateVendorPath(vendorPath string, src string) {
 		innerSrc := filepath.Join(src, f.Name())
 		dst := filepath.Join(vendorPath, f.Name())
 		if err := os.Symlink(innerSrc, dst); err != nil {
-			fmt.Println("symlink error, trying", innerSrc, err)
-			populateVendorPath(dst, innerSrc)
+			fmt.Printf("symlink error for %q: %v\n", innerSrc, err)
+			if f.IsDir() {
+				populateVendorPath(dst, innerSrc)
+			}
 		}
 	}
 }
